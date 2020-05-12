@@ -30,13 +30,23 @@ Let people know how they can dive into the project, include important links to t
 
 A short snippet describing the license (MIT, Apache, etc.)
 
-
+_______
 Number and name of feature: Repository Set Up
+
+Estimate of time needed to complete: 90 minutes
+
+Start time: 3:30pm
+
+Finish time: 4:50pm
+
+Actual time needed to complete: 80 minutes
+_______
+Number and name of feature: Locations
 
 Estimate of time needed to complete: 60 minutes
 
-Start time: 4:00pm
+Start time: 4:50pm
 
-Finish time: _____
+Finish time: 
 
-Actual time needed to complete: _____
+Actual time needed to complete: 
