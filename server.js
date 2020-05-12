@@ -48,8 +48,8 @@ app.use('/weather', (req, res) => {
   // const forecast = dataFromWeatherJson.data[0].weather.description;
   // const time = dataFromWeatherJson.data[0].datetime;
 
-  let weather = new Weather(dataFromWeatherJson);
-  console.log(dataFromWeatherJson.data[0]);
+  // let weather = new Weather(dataFromWeatherJson);
+  // console.log(dataFromWeatherJson.data[0]);
   const weatherArr = [];
 
   dataFromWeatherJson.data.forEach(current => {
@@ -57,12 +57,12 @@ app.use('/weather', (req, res) => {
     weatherArr.push(weather);
   });
 
-  res.send(weather);
+  res.send(weatherArr);
 });
-// cannot read property of 'description' of undefined
+
 function Weather (obj) {
-  this.forecast = obj.data.weather.description;
-  this.time = obj.data.datetime;
+  this.forecast = obj.weather.description;
+  this.time = obj.datetime;
 }
 
 
