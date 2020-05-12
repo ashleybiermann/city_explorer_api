@@ -12,7 +12,7 @@ const app = express(); //app is our entire server
 app.use(cors()); // configure the app to talk to other local websites without blocking them
 
 app.get('/location', (req, res) => {
-  console.log('hey from the server');
+  console.log('hey from the server - location');
   const dataFromLocationJson = require('./data/location.json'); // just a little proof of life. in browser 'localhost:3000/location'
 
   const city = req.query.city;
@@ -22,7 +22,7 @@ app.get('/location', (req, res) => {
   console.log(latitudeCoord);
   const longitudeCoord = dataFromLocationJson[0].lon;
   console.log(longitudeCoord);
-  
+
   const coordinates = []; //push into array
   coordinates.push(latitudeCoord, longitudeCoord);
 
@@ -37,6 +37,34 @@ function Location (entireDataObject, city) {
   this.latitude = entireDataObject.lat;
   this.longitude = entireDataObject.lon;
 }
+
+app.use('/weather', (req, res) => {
+  console.log('hey from the server - weather');
+  const dataFromWeatherJson = require('./data/weather.json');
+  //target the useful data
+  console.log(dataFromWeatherJson.data[0].weather.description);
+  console.log(dataFromWeatherJson.data[0].datetime);
+
+  // const forecast = dataFromWeatherJson.data[0].weather.description;
+  // const time = dataFromWeatherJson.data[0].datetime;
+
+  let weather = new Weather(dataFromWeatherJson);
+  console.log(dataFromWeatherJson.data[0]);
+  const weatherArr = [];
+
+  dataFromWeatherJson.data.forEach(current => {
+    let weather = new Weather(current);
+    weatherArr.push(weather);
+  });
+
+  res.send(weather);
+});
+// cannot read property of 'description' of undefined
+function Weather (obj) {
+  this.forecast = obj.data.weather.description;
+  this.time = obj.data.datetime;
+}
+
 
 app.listen(PORT, () => {
   console.log('Hello from the port 3000 ' + PORT); // in browser 'localhost:3000'
