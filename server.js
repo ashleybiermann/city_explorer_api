@@ -15,7 +15,9 @@ app.get('/location', (req, res) => {
   console.log('hey from the server');
   const dataFromLocationJson = require('./data/location.json'); // just a little proof of life. in browser 'localhost:3000/location'
 
-  //target the useful data
+  const city = req.query.city;
+
+  //target the useful data !! WILL be UseFul TO THE WEATHER ASPEcT
   const latitudeCoord = dataFromLocationJson[0].lat;
   console.log(latitudeCoord);
   const longitudeCoord = dataFromLocationJson[0].lon;
@@ -25,11 +27,12 @@ app.get('/location', (req, res) => {
   coordinates.push(latitudeCoord, longitudeCoord);
 
   // send resulting array to front end
-  res.send(coordinates);
+  let location = new Location(dataFromLocationJson[0], city);
+  res.send(location);
 });
 
-function Location (entireDataObject) {
-  this.search_query =
+function Location (entireDataObject, city) {
+  this.search_query = city;
   this.formatted_query = entireDataObject.display_name;
   this.latitude = entireDataObject.lat;
   this.longitude = entireDataObject.lon;
