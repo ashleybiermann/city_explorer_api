@@ -53,7 +53,7 @@ app.get('/location', (req, res) => {
     let location = new Location(resultFromSuper.body[0], city);
     res.send(location);
   }).catch(error => {
-    res.send(error).status(500);
+    res.send('Sorry, something went wrong.' + error).status(500);
   });
 });
 
@@ -67,18 +67,18 @@ app.get('/weather', (req, res) => {
     lat: req.query.latitude,
     lon: req.query.longitude,
     format: 'json',
-    limit: 8,
+    days: 8,
   };
 // TODO: limit to 8 return results
   superagent.get(url).query(queryForSuper).then(resultFromSuper => {
+    console.log(resultFromSuper.body.data);
     const weatherArr = resultFromSuper.body.data.map(current => {
       return new Weather(current);
     });
     res.send(weatherArr);
-  //target the useful data
   }).catch(error => {
     console.log('error from weather ', error);
-    res.send(error).status(500);
+    res.send('Sorry, something went wrong.' + error).status(500);
   });
 });
 
@@ -92,7 +92,7 @@ app.get('/trails', (req, res) => {
     lat: req.query.latitude,
     lon: req.query.longitude,
     format: 'json',
-    limit: 10,
+    maxResults: 10,
   };
 
   superagent.get(url).query(queryForSuper).then(resultFromSuper => {
@@ -102,12 +102,12 @@ app.get('/trails', (req, res) => {
     res.send(trailArr);
   }).catch(error => {
     console.log('error from trail ', error);
-    res.send(error).status(500);
+    res.send('Sorry, something went wrong.' + error).status(500);
   });
 });
 
 app.get('/', (req, res) => {
-  res.redirect('https://codefellows.github.io/code-301-guide/curriculum/city-explorer-app/front-end/')
+  res.redirect('https://codefellows.github.io/code-301-guide/curriculum/city-explorer-app/front-end/');
 });
 
 app.listen(PORT, () => {
