@@ -4,8 +4,18 @@ City Explorer is an app that allows a user to access location maps, weather, and
 
 At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
 
-## Code Example
+## Getting Started
+Run npm install at root directory
+Gather your own API keys (see below) and put them in a .env files in root directly
 
+````environment````
+PORT=3000
+GEOCODE_API_KEY=aaaaaaaaaaaaaaaa
+WEATHER_API_KEY=aaaaaaaaaaaaaaaa
+TRAILS_API_KEY=aaaaaaaaaaaaaaa
+````environment````
+
+## Code Example
 app.get('/trails', (req, res) => {
   console.log('hey from the server - trails');
   const url = `https://www.hikingproject.com/data/get-trails`;
