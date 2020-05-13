@@ -15,7 +15,7 @@ app.use(cors()); // configure the app to talk to other local websites without bl
 // database config
 const client = new pg.Client(process.env.DATABASE_URL);
 client.on('error', console.error); // like console.log, but different color
-client.connect();
+
 
 //TODO: Format dates and times and days to match the cards
 function Location (entireDataObject, city) {
@@ -125,6 +125,7 @@ app.get('/trails', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
+client.connect().then(app.listen(PORT, () => {
+
   console.log('Hello from the port 3000 ' + PORT); // in browser 'localhost:3000'
-});
+}));
