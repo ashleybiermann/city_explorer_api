@@ -32,9 +32,8 @@ function Trail (obj) {
   this.summary = obj.summary;
   this.trail_url = obj.url;
   this.conditions = obj.conditionStatus;
-  //TODO: separate out date and time
-  this.condition_date = obj.conditionDate;
-  this.condition_time = obj.conditionDate;
+  this.condition_date = obj.conditionDate.slice(0, 10);
+  this.condition_time = obj.conditionDate.slice(11, 19);
 }
 
 app.get('/location', (req, res) => {
@@ -107,7 +106,6 @@ app.get('/trails', (req, res) => {
     res.send(error).status(500);
   });
 });
-
 
 app.listen(PORT, () => {
   console.log('Hello from the port 3000 ' + PORT); // in browser 'localhost:3000'
