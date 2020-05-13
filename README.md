@@ -134,3 +134,13 @@ Start time: 6:45pm
 Finish time: 7:45pm
 
 Actual time needed to complete: 60 minutes
+______
+Number and name of feature: Database setup
+
+Estimate of time needed to complete: 90 minutes
+
+Start time: 3:15pm
+
+Finish time: 4:20pm
+
+Actual time needed to complete: 65 minutes
