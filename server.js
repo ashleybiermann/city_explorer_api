@@ -15,7 +15,6 @@ app.get('/location', (req, res) => {
   console.log('hey from the server - location');
   const url = `https://us1.locationiq.com/v1/search.php`;
   const myKey = process.env.GEOCODE_API_KEY;
-
   const city = req.query.city;
 
   const queryForSuper = {
@@ -41,11 +40,22 @@ function Location (entireDataObject, city) {
 }
 
 
-
-
 app.get('/weather', (req, res) => {
   console.log('hey from the server - weather');
-  const dataFromWeatherJson = require('./data/weather.json');
+  const url = `https://api.weatherbit.io/v2.0/current`;
+  const myKey = process.env.WEATHER_API_KEY;
+  const city = req.query.city;
+
+  const queryForSuper = {
+    key: myKey,
+    q: city,
+    format: 'json',
+    limit: 1,
+  };
+
+  superagent.get(url).query(queryForSuper).then(resultFromSuper => {
+    let weather = new Weather()
+  });
   //target the useful data
   const weatherArr = dataFromWeatherJson.data.map(current => {
     return new Weather(current);
