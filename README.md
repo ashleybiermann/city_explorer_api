@@ -75,7 +75,7 @@ Number and name of feature: Weather
 
 Estimate of time needed to complete: 90 minutes
 
-Start time: 
+Start time: 5:30pm
 
 Finish time: 
 
