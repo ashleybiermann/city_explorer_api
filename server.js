@@ -14,6 +14,10 @@ app.use(cors()); // configure the app to talk to other local websites without bl
 
 // database config
 const client = new pg.Client(process.env.DATABASE_URL);
+client.connect().then(app.listen(PORT, () => {
+
+  console.log('Hello from inside of the database at port ' + PORT); // in browser 'localhost:3000'
+}));
 client.on('error', console.error); // like console.log, but different color
 
 
@@ -125,7 +129,7 @@ app.get('/trails', (req, res) => {
     });
 });
 
-client.connect().then(app.listen(PORT, () => {
 
-  console.log('Hello from the port 3000 ' + PORT); // in browser 'localhost:3000'
-}));
+app.listen(PORT, () => {
+  console.log('Hello from the port ' + PORT); // in browser 'localhost:3000'
+});
