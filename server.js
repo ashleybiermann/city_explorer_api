@@ -52,7 +52,7 @@ app.get('/weather', (req, res) => {
     format: 'json',
     limit: 8,
   };
-
+// TODO: limit to 8 return results
   superagent.get(url).query(queryForSuper).then(resultFromSuper => {
     const weatherArr = resultFromSuper.body.data.map(current => {
       return new Weather(current);
