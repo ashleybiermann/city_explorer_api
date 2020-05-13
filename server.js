@@ -1,11 +1,11 @@
 'use strict';
 
-// define packages
+// define packages DEPENDENCIES
 require('dotenv').config(); // good to keep this one first, to avoid
 const express = require('express');
 const cors = require('cors');
-
-const PORT = process.env.PORT || 3000; // look to an evn variable called PORT, or default to 3000
+const superagent = require('superagent');
+const PORT = process.env.PORT || 3001;
 const app = express(); //app is our entire server
 
 //configs
@@ -13,22 +13,24 @@ app.use(cors()); // configure the app to talk to other local websites without bl
 
 app.get('/location', (req, res) => {
   console.log('hey from the server - location');
-  const dataFromLocationJson = require('./data/location.json'); // just a little proof of life. in browser 'localhost:3000/location'
+  const url = `https://us1.locationiq.com/v1/search.php`;
+  const myKey = process.env.GEOCODE_API_KEY;
 
   const city = req.query.city;
 
-  //target the useful data !! WILL be UseFul TO THE WEATHER ASPEcT
-  const latitudeCoord = dataFromLocationJson[0].lat;
-  console.log(latitudeCoord);
-  const longitudeCoord = dataFromLocationJson[0].lon;
-  console.log(longitudeCoord);
+  const queryForSuper = {
+    key: myKey,
+    q: city,
+    format: 'json',
+    limit: 1,
+  };
 
-  const coordinates = []; //push into array
-  coordinates.push(latitudeCoord, longitudeCoord);
-
-  // send resulting array to front end
-  let location = new Location(dataFromLocationJson[0], city);
-  res.send(location);
+  superagent.get(url).query(queryForSuper).then(resultFromSuper => {
+    let location = new Location(resultFromSuper.body[0], city);
+    res.send(location);
+  }).catch(error => {
+    res.send(error).status(500);
+  });
 });
 
 function Location (entireDataObject, city) {
@@ -38,25 +40,16 @@ function Location (entireDataObject, city) {
   this.longitude = entireDataObject.lon;
 }
 
-app.use('/weather', (req, res) => {
+
+
+
+app.get('/weather', (req, res) => {
   console.log('hey from the server - weather');
   const dataFromWeatherJson = require('./data/weather.json');
   //target the useful data
-  console.log(dataFromWeatherJson.data[0].weather.description);
-  console.log(dataFromWeatherJson.data[0].datetime);
-
-  // const forecast = dataFromWeatherJson.data[0].weather.description;
-  // const time = dataFromWeatherJson.data[0].datetime;
-
-  // let weather = new Weather(dataFromWeatherJson);
-  // console.log(dataFromWeatherJson.data[0]);
-  const weatherArr = [];
-
-  dataFromWeatherJson.data.forEach(current => {
-    let weather = new Weather(current);
-    weatherArr.push(weather);
+  const weatherArr = dataFromWeatherJson.data.map(current => {
+    return new Weather(current);
   });
-
   res.send(weatherArr);
 });
 
@@ -64,7 +57,6 @@ function Weather (obj) {
   this.forecast = obj.weather.description;
   this.time = obj.datetime;
 }
-
 
 app.listen(PORT, () => {
   console.log('Hello from the port 3000 ' + PORT); // in browser 'localhost:3000'
