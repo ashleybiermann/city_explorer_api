@@ -11,6 +11,32 @@ const app = express(); //app is our entire server
 //configs
 app.use(cors()); // configure the app to talk to other local websites without blocking them
 
+function Location (entireDataObject, city) {
+  this.search_query = city;
+  this.formatted_query = entireDataObject.display_name;
+  this.latitude = entireDataObject.lat;
+  this.longitude = entireDataObject.lon;
+}
+
+function Weather (obj) {
+  this.forecast = obj.weather.description;
+  this.time = obj.valid_date;
+}
+
+function Trail (obj) {
+  this.name = obj.name;
+  this.location = obj.location;
+  this.length = obj.length;
+  this.stars = obj.stars;
+  this.star_votes = obj.starVotes;
+  this.summary = obj.summary;
+  this.trail_url = obj.url;
+  this.conditions = obj.conditionStatus;
+  //TODO: separate out date and time
+  this.condition_date = obj.conditionDate;
+  this.condition_time = obj.conditionDate;
+}
+
 app.get('/location', (req, res) => {
   console.log('hey from the server - location');
   const url = 'https://us1.locationiq.com/v1/search.php';
@@ -31,14 +57,6 @@ app.get('/location', (req, res) => {
     res.send(error).status(500);
   });
 });
-
-function Location (entireDataObject, city) {
-  this.search_query = city;
-  this.formatted_query = entireDataObject.display_name;
-  this.latitude = entireDataObject.lat;
-  this.longitude = entireDataObject.lon;
-}
-
 
 app.get('/weather', (req, res) => {
   console.log('hey from the server - weather');
@@ -65,10 +83,31 @@ app.get('/weather', (req, res) => {
   });
 });
 
-function Weather (obj) {
-  this.forecast = obj.weather.description;
-  this.time = obj.datetime;
-}
+app.get('/trails', (req, res) => {
+  console.log('hey from the server - trails');
+  const url = `https://www.hikingproject.com/data/get-trails`;
+  const myKey = process.env.TRAILS_API_KEY;
+
+  const queryForSuper = {
+    key: myKey,
+    lat: req.query.latitude,
+    lon: req.query.longitude,
+    format: 'json',
+    limit: 10,
+  };
+
+  superagent.get(url).query(queryForSuper).then(resultFromSuper => {
+    const trailArr = resultFromSuper.body.trails.map(current => {
+      return new Trail(current);
+    });
+    res.send(trailArr);
+  //target the useful data
+  }).catch(error => {
+    console.log('error from trail ', error);
+    res.send(error).status(500);
+  });
+});
+
 
 app.listen(PORT, () => {
   console.log('Hello from the port 3000 ' + PORT); // in browser 'localhost:3000'
