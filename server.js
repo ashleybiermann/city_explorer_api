@@ -100,11 +100,14 @@ app.get('/trails', (req, res) => {
       return new Trail(current);
     });
     res.send(trailArr);
-  //target the useful data
   }).catch(error => {
     console.log('error from trail ', error);
     res.send(error).status(500);
   });
+});
+
+app.get('/', (req, res) => {
+  res.redirect('https://codefellows.github.io/code-301-guide/curriculum/city-explorer-app/front-end/')
 });
 
 app.listen(PORT, () => {
