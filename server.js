@@ -13,7 +13,7 @@ app.use(cors()); // configure the app to talk to other local websites without bl
 
 app.get('/location', (req, res) => {
   console.log('hey from the server - location');
-  const url = `https://us1.locationiq.com/v1/search.php`;
+  const url = 'https://us1.locationiq.com/v1/search.php';
   const myKey = process.env.GEOCODE_API_KEY;
   const city = req.query.city;
 
@@ -42,25 +42,27 @@ function Location (entireDataObject, city) {
 
 app.get('/weather', (req, res) => {
   console.log('hey from the server - weather');
-  const url = `https://api.weatherbit.io/v2.0/current`;
+  const url = `https://api.weatherbit.io/v2.0/forecast/daily`;
   const myKey = process.env.WEATHER_API_KEY;
-  const city = req.query.city;
 
   const queryForSuper = {
     key: myKey,
-    q: city,
+    lat: req.query.latitude,
+    lon: req.query.longitude,
     format: 'json',
-    limit: 1,
+    limit: 8,
   };
 
   superagent.get(url).query(queryForSuper).then(resultFromSuper => {
-    let weather = new Weather()
-  });
+    const weatherArr = resultFromSuper.body.data.map(current => {
+      return new Weather(current);
+    });
+    res.send(weatherArr);
   //target the useful data
-  const weatherArr = dataFromWeatherJson.data.map(current => {
-    return new Weather(current);
+  }).catch(error => {
+    console.log('error from weather ', error);
+    res.send(error).status(500);
   });
-  res.send(weatherArr);
 });
 
 function Weather (obj) {
