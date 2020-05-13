@@ -60,3 +60,23 @@ Start time: 8:10pm
 Finish time: 10:30pm, with break
 
 Actual time needed to complete: 90 minutes
+______
+Number and name of feature: 
+
+Estimate of time needed to complete: 90 minutes
+
+Start time: 3:30pm
+
+Finish time: 5:10pm
+
+Actual time needed to complete: 100 minutes
+______
+Number and name of feature: Weather
+
+Estimate of time needed to complete: 90 minutes
+
+Start time: 
+
+Finish time: 
+
+Actual time needed to complete: minutes
