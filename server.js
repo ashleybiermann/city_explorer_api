@@ -43,6 +43,16 @@ function Trail(obj) {
   this.condition_time = obj.conditionDate.slice(obj.conditionDate.indexOf(' '), 19);
 }
 
+function Movie(obj) {
+  this.title = obj.title;
+  this.overview = obj.overview;
+  this.average_votes = obj.vote_average;
+  this.total_votes = obj.vote_count;
+  this.image_url = obj.poster_path;
+  this.popularity = obj.popularity;
+  this.released_on = obj.release_date;
+}
+
 app.get('/', (req, res) => {
   res.redirect('https://codefellows.github.io/code-301-guide/curriculum/city-explorer-app/front-end/');
 });
@@ -65,7 +75,6 @@ app.get('/location', (req, res) => {
   client.query(sqlQuery, sqlValues)
     .then(resultFromSql => {
       // console.log(resultFromSql);
-
       if (resultFromSql.rowCount > 0) {
         //send them stuff from sql
         //send a location looking object (with search_query, formatted_query...)
@@ -143,6 +152,29 @@ app.get('/trails', (req, res) => {
     });
 });
 
+app.get('/movies', (req, res) => {
+  console.log('hey from the server - movies');
+  const url = 'https://api.themoviedb.org/3/search/movie';
+  const myKey = process.env.MOVIE_API_KEY;
+  const movieQuery = req.query.search_query; // this API won't accept this unless it is held in a variable
+
+  const queryForSuper = {
+    api_key: myKey,
+    query: movieQuery,
+  };
+
+  superagent.get(url)
+    .query(queryForSuper)
+    .then(resultFromSuper => {
+      const movieArr = resultFromSuper.body.results.map(current => {
+        return new Movie(current);
+      });
+      res.send(movieArr);
+    })
+    .catch(error => {
+      console.error('error from movies ', error);
+    });
+});
 
 app.listen(PORT, () => {
   console.log('Hello from the port ' + PORT); // in browser 'localhost:3000'
