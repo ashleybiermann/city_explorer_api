@@ -58,7 +58,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/location', (req, res) => {
-  console.log('hey from the server - location');
   const url = 'https://us1.locationiq.com/v1/search.php';
   const myKey = process.env.GEOCODE_API_KEY;
   const city = req.query.city;
@@ -99,7 +98,6 @@ app.get('/location', (req, res) => {
 });
 
 app.get('/weather', (req, res) => {
-  console.log('hey from the server - weather');
   const url = 'https://api.weatherbit.io/v2.0/forecast/daily';
   const myKey = process.env.WEATHER_API_KEY;
 
@@ -126,7 +124,6 @@ app.get('/weather', (req, res) => {
 });
 
 app.get('/trails', (req, res) => {
-  console.log('hey from the server - trails');
   const url = 'https://www.hikingproject.com/data/get-trails';
   const myKey = process.env.TRAILS_API_KEY;
 
@@ -153,7 +150,6 @@ app.get('/trails', (req, res) => {
 });
 
 app.get('/movies', (req, res) => {
-  console.log('hey from the server - movies');
   const url = 'https://api.themoviedb.org/3/search/movie';
   const myKey = process.env.MOVIE_API_KEY;
   const movieQuery = req.query.search_query; // this API won't accept this unless it is held in a variable
@@ -163,6 +159,9 @@ app.get('/movies', (req, res) => {
     query: movieQuery,
   };
 
+
+  // test note
+  
   superagent.get(url)
     .query(queryForSuper)
     .then(resultFromSuper => {
@@ -174,6 +173,12 @@ app.get('/movies', (req, res) => {
     .catch(error => {
       console.error('error from movies ', error);
     });
+});
+
+app.get('/yelp', (req, res) => {
+  console.log('hey from the server - yelp');
+  const url = '';
+  const myKey = process.env.YELP_API_KEY;
 });
 
 app.listen(PORT, () => {
