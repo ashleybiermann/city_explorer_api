@@ -154,3 +154,23 @@ Start time: 4:25pm
 Finish time: 5:40pm
 
 Actual time needed to complete: 75 minutes
+_____
+Number and name of feature: Movies
+
+Estimate of time needed to complete: 80 minutes
+
+Start time: 3:30pm
+
+Finish time: 4:30pm
+
+Actual time needed to complete: 60 minutes
+_____
+Number and name of feature: Yelp
+
+Estimate of time needed to complete: 80 minutes
+
+Start time: 4:40pm
+
+Finish time: pm
+
+Actual time needed to complete:  minutes
