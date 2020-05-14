@@ -15,10 +15,7 @@ app.use(cors()); // configure the app to talk to other local websites without bl
 // database config
 const client = new pg.Client(process.env.DATABASE_URL);
 client.on('error', console.error); // like console.log, but different color
-client.connect().then(app.listen(PORT, () => {
-  console.log('Hello from inside of the database at port ' + PORT); // in browser 'localhost:3000'
-}));
-
+client.connect();
 
 //TODO: Format dates and times and days to match the cards
 function Location(entireDataObject, city) {
@@ -67,7 +64,7 @@ app.get('/location', (req, res) => {
   const sqlValues = [city]; // heroku doesn't like this to be left as req.query.city
   client.query(sqlQuery, sqlValues)
     .then(resultFromSql => {
-      console.log(resultFromSql);
+      // console.log(resultFromSql);
 
       if (resultFromSql.rowCount > 0) {
         //send them stuff from sql
@@ -150,3 +147,6 @@ app.get('/trails', (req, res) => {
 app.listen(PORT, () => {
   console.log('Hello from the port ' + PORT); // in browser 'localhost:3000'
 });
+// .then(app.listen(PORT, () => {
+//   console.log('Hello from inside of the database at port ' + PORT); // in browser 'localhost:3000'
+// }));
