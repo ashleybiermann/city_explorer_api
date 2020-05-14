@@ -14,27 +14,26 @@ app.use(cors()); // configure the app to talk to other local websites without bl
 
 // database config
 const client = new pg.Client(process.env.DATABASE_URL);
+client.on('error', console.error); // like console.log, but different color
 client.connect().then(app.listen(PORT, () => {
-
   console.log('Hello from inside of the database at port ' + PORT); // in browser 'localhost:3000'
 }));
-client.on('error', console.error); // like console.log, but different color
 
 
 //TODO: Format dates and times and days to match the cards
-function Location (entireDataObject, city) {
+function Location(entireDataObject, city) {
   this.search_query = city;
   this.formatted_query = entireDataObject.display_name;
   this.latitude = entireDataObject.lat;
   this.longitude = entireDataObject.lon;
 }
 
-function Weather (obj) {
+function Weather(obj) {
   this.forecast = obj.weather.description;
   this.time = obj.valid_date;
 }
 
-function Trail (obj) {
+function Trail(obj) {
   this.name = obj.name;
   this.location = obj.location;
   this.length = obj.length;
@@ -56,7 +55,6 @@ app.get('/location', (req, res) => {
   const url = 'https://us1.locationiq.com/v1/search.php';
   const myKey = process.env.GEOCODE_API_KEY;
   const city = req.query.city;
-
   const queryForSuper = {
     key: myKey,
     q: city,
@@ -64,11 +62,30 @@ app.get('/location', (req, res) => {
     limit: 1,
   };
 
-  superagent.get(url)
-    .query(queryForSuper)
-    .then(resultFromSuper => {
-      let location = new Location(resultFromSuper.body[0], city);
-      res.send(location);
+  //if request exists in database, use it instead
+  const sqlQuery = 'SELECT * FROM locations WHERE search_query=$1';
+  const sqlValues = [city]; // heroku doesn't like this to be left as req.query.city
+  client.query(sqlQuery, sqlValues)
+    .then(resultFromSql => {
+      console.log(resultFromSql);
+
+      if (resultFromSql.rowCount > 0) {
+        //send them stuff from sql
+        //send a location looking object (with search_query, formatted_query...)
+        res.send(resultFromSql.rows[0]);
+      } else {
+        superagent.get(url)
+          .query(queryForSuper)
+          .then(resultFromSuper => {
+            const newLocation = new Location(resultFromSuper.body[0], city);
+
+            //save into db
+            const sqlQuery = 'INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES($1, $2, $3, $4)';
+            const valueArray = [newLocation.search_query, newLocation.formatted_query, newLocation.latitude, newLocation.longitude];
+            client.query(sqlQuery, valueArray);
+            res.send(newLocation);
+          });
+      }
     })
     .catch(error => {
       res.send('Sorry, something went wrong.' + error).status(500);

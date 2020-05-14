@@ -144,3 +144,13 @@ Start time: 3:15pm
 Finish time: 4:20pm
 
 Actual time needed to complete: 65 minutes
+_____
+Number and name of feature: Server
+
+Estimate of time needed to complete: 90 minutes
+
+Start time: 4:25pm
+
+Finish time: 5:40pm
+
+Actual time needed to complete: 75 minutes
