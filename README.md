@@ -169,7 +169,7 @@ Number and name of feature: Yelp
 
 Estimate of time needed to complete: 80 minutes
 
-Start time: 4:40pm
+Start time: 4:45pm
 
 Finish time: pm
 

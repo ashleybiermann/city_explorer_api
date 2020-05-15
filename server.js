@@ -53,6 +53,14 @@ function Movie(obj) {
   this.released_on = obj.release_date;
 }
 
+function Restaurant(obj) {
+  this.name = obj.name;
+  this.image_url = obj.image_url;
+  this.price = obj.price;
+  this.rating = obj.rating;
+  this.url = obj.url;
+}
+
 app.get('/', (req, res) => {
   res.redirect('https://codefellows.github.io/code-301-guide/curriculum/city-explorer-app/front-end/');
 });
@@ -159,9 +167,6 @@ app.get('/movies', (req, res) => {
     query: movieQuery,
   };
 
-
-  // test note
-  
   superagent.get(url)
     .query(queryForSuper)
     .then(resultFromSuper => {
@@ -177,8 +182,28 @@ app.get('/movies', (req, res) => {
 
 app.get('/yelp', (req, res) => {
   console.log('hey from the server - yelp');
-  const url = '';
-  const myKey = process.env.YELP_API_KEY;
+  const url = 'https://api.yelp.com/v3/businesses/search';
+  const myKey = `Bearer ${process.env.YELP_API_KEY}`;
+  const yelpQuery = req.query.search_query;
+
+  const queryForSuper = {
+    location: yelpQuery,
+    limit: 20, // limit is 50
+  };
+
+  superagent.get(url)
+    .set('Authorization', myKey)
+    .query(queryForSuper)
+    .then(resultfromSuper => {
+      console.log(resultfromSuper.body.businesses[0]);
+      const restaurantArr = resultfromSuper.body.businesses.map(current => {
+        return new Restaurant(current);
+      });
+      res.send(restaurantArr);
+    })
+    .catch(error => {
+      console.error('error from yelp ', error);
+    });
 });
 
 app.listen(PORT, () => {
