@@ -158,6 +158,8 @@ app.get('/trails', (req, res) => {
 });
 
 app.get('/movies', (req, res) => {
+  console.log('hey from the server - movies');
+
   const url = 'https://api.themoviedb.org/3/search/movie';
   const myKey = process.env.MOVIE_API_KEY;
   const movieQuery = req.query.search_query; // this API won't accept this unless it is held in a variable
